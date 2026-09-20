@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>Sudoku</title>
+<meta name="description" content="A clean, installable Sudoku puzzle app." />
+<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1B1916" media="(prefers-color-scheme: dark)" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- Game screen -->
+  <div id="game-screen">
+    <header class="top-bar">
+      <h1 class="wordmark">Sudoku</h1>
+      <div class="top-bar-actions">
+        <button id="new-game-btn" class="icon-btn" type="button" aria-label="New game">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <button id="settings-btn" class="icon-btn" type="button" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="stats-card">
+      <button id="difficulty-stat" class="stat stat-difficulty" type="button">
+        <span class="stat-label">Difficulty</span>
+        <span class="stat-value" id="difficulty-value">Medium</span>
+      </button>
+      <div id="mistakes-stat" class="stat stat-mistakes">
+        <span class="stat-label">Mistakes</span>
+        <span class="stat-value"><span id="mistakes-value">0</span>/3</span>
+      </div>
+      <div id="time-stat" class="stat stat-time">
+        <span class="stat-label">Time</span>
+        <div class="stat-time-row">
+          <span class="stat-value" id="time-value">00:00</span>
+          <button id="pause-btn" class="icon-btn icon-btn-sm" type="button" aria-label="Pause">
+            <svg id="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            <svg id="play-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none" hidden><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="board-wrap">
+      <div id="board" class="board" role="grid" aria-label="Sudoku board"></div>
+      <div id="pause-overlay" class="pause-overlay" hidden>
+        <button id="resume-btn" class="btn btn-accent" type="button">Resume</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button id="undo-btn" class="tool-btn" type="button" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+        <span>Undo</span>
+      </button>
+      <button id="notes-btn" class="tool-btn" type="button" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        <span>Notes</span>
+      </button>
+      <button id="erase-btn" class="tool-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.35-4.35a1 1 0 0 1 0-1.41L14.3 3.6a1 1 0 0 1 1.41 0l5.66 5.67a1 1 0 0 1 0 1.41L11 21"/><path d="M22 21H7"/><path d="m5 11 7 7"/></svg>
+        <span>Erase</span>
+      </button>
+      <button id="hint-btn" class="tool-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2Z"/></svg>
+        <span>Hint</span>
+        <span id="hint-badge" class="tool-badge">3</span>
+      </button>
+    </div>
+
+    <div id="number-pad" class="number-pad"></div>
+  </div>
+
+  <!-- New Game sheet -->
+  <div id="new-game-overlay" class="sheet-overlay" hidden>
+    <div class="sheet" role="dialog" aria-labelledby="new-game-title">
+      <div class="sheet-handle"></div>
+      <h2 id="new-game-title" class="sheet-title">New puzzle</h2>
+      <p class="sheet-subtext">Choosing a new level replaces your current progress.</p>
+      <div id="level-list" class="level-list"></div>
+      <div class="sheet-divider"></div>
+      <button id="restart-btn" class="sheet-row sheet-row-action" type="button">
+        <span>Restart this puzzle</span>
+        <span class="sheet-row-hint">Keeps the same puzzle, clears your entries</span>
+      </button>
+      <button id="new-game-cancel" class="btn btn-ghost sheet-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Settings screen -->
+  <div id="settings-screen" class="screen-overlay" hidden>
+    <header class="top-bar">
+      <button id="settings-back-btn" class="icon-btn" type="button" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <h1 class="wordmark">Settings</h1>
+      <div class="top-bar-actions"></div>
+    </header>
+    <div class="settings-body" id="settings-body"></div>
+  </div>
+
+  <!-- Completion modal -->
+  <div id="completion-overlay" class="sheet-overlay" hidden>
+    <div class="sheet sheet-center" role="dialog" aria-labelledby="completion-title">
+      <h2 id="completion-title" class="sheet-title">Puzzle complete</h2>
+      <p class="sheet-subtext" id="completion-level">Medium</p>
+      <div class="completion-stats">
+        <div class="completion-stat">
+          <span class="stat-label">Time</span>
+          <span class="stat-value" id="completion-time">00:00</span>
+        </div>
+        <div class="completion-stat">
+          <span class="stat-label">Mistakes</span>
+          <span class="stat-value" id="completion-mistakes">0</span>
+        </div>
+      </div>
+      <button id="completion-new-game" class="btn btn-accent" type="button">New game</button>
+      <button id="completion-close" class="btn btn-ghost" type="button">Close</button>
+    </div>
+  </div>
+
+  <!-- Mistake-limit-reached modal -->
+  <div id="limit-overlay" class="sheet-overlay" hidden>
+    <div class="sheet sheet-center" role="dialog" aria-labelledby="limit-title">
+      <h2 id="limit-title" class="sheet-title">Out of chances</h2>
+      <p class="sheet-subtext">You reached 3 mistakes on this puzzle.</p>
+      <button id="limit-restart" class="btn btn-accent" type="button">Restart puzzle</button>
+      <button id="limit-new-game" class="btn btn-ghost" type="button">New game</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/solver.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/board.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
