@@ -284,6 +284,10 @@ button.stat {
   grid-template-rows: repeat(3, 1fr);
 }
 
+.cell-notes[hidden] {
+  display: none;
+}
+
 .cell-note {
   display: flex;
   align-items: center;
