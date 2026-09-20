@@ -15,10 +15,6 @@ function buildBoard(container) {
       cell.setAttribute("role", "gridcell");
       cell.setAttribute("tabindex", "-1");
 
-      const boxRow = Math.floor(r / 3);
-      const boxCol = Math.floor(c / 3);
-      if (boxRow % 2 === boxCol % 2) cell.classList.add("cell-box-a");
-      else cell.classList.add("cell-box-b");
       if (c % 3 === 2 && c !== 8) cell.classList.add("box-edge-right");
       if (r % 3 === 2 && r !== 8) cell.classList.add("box-edge-bottom");
 

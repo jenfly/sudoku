@@ -231,10 +231,6 @@ button.stat {
   user-select: none;
 }
 
-.cell-box-b {
-  background: var(--box-tint);
-}
-
 .cell.box-edge-right {
   border-right: 2px solid var(--ink);
 }
@@ -249,19 +245,15 @@ button.stat {
 }
 
 .cell.is-peer {
-  background: color-mix(in srgb, var(--accent-soft) 55%, var(--surface));
+  background: var(--box-tint);
 }
 
 .cell.is-same-value {
-  background: color-mix(in srgb, var(--accent-soft) 80%, var(--surface));
+  background: color-mix(in srgb, var(--ink-soft) 30%, var(--box-tint));
 }
 
 .cell.is-selected {
-  background: var(--accent-soft);
-}
-
-.cell.is-selected.cell-box-b {
-  background: var(--accent-soft);
+  background: color-mix(in srgb, var(--ink-soft) 30%, var(--box-tint));
 }
 
 .cell-value {
