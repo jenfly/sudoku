@@ -14,6 +14,7 @@
     board: document.getElementById("board"),
     pauseOverlay: document.getElementById("pause-overlay"),
     resumeBtn: document.getElementById("resume-btn"),
+    generatingOverlay: document.getElementById("generating-overlay"),
     undoBtn: document.getElementById("undo-btn"),
     modeNormalBtn: document.getElementById("mode-normal-btn"),
     modeNotesBtn: document.getElementById("mode-notes-btn"),
@@ -453,10 +454,19 @@
     }
   }
 
+  // Higher difficulties can take a couple of seconds to generate (the
+  // logic-solver gating in Generator.generatePuzzle runs many trial solves
+  // per puzzle) — show the board's loading overlay and defer the actual
+  // (synchronous, main-thread-blocking) generation a tick so the browser
+  // gets to paint it first, instead of just freezing with no feedback.
   function startNewPuzzle(level) {
-    state = newPuzzleState(level);
-    persist(true);
-    render();
+    els.generatingOverlay.hidden = false;
+    setTimeout(() => {
+      state = newPuzzleState(level);
+      persist(true);
+      render();
+      els.generatingOverlay.hidden = true;
+    }, 30);
   }
 
   function restartCurrentPuzzle() {

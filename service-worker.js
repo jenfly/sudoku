@@ -1,4 +1,4 @@
-const CACHE_NAME = "sudoku-cache-v8";
+const CACHE_NAME = "sudoku-cache-v9";
 
 const APP_SHELL = [
   "./",
@@ -7,6 +7,7 @@ const APP_SHELL = [
   "./css/styles.css",
   "./js/storage.js",
   "./js/solver.js",
+  "./js/logic-solver.js",
   "./js/generator.js",
   "./js/board.js",
   "./js/settings.js",

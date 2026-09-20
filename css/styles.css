@@ -326,6 +326,12 @@ button.stat {
   display: none;
 }
 
+.generating-label {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  color: var(--ink);
+}
+
 /* ---------- toolbar ---------- */
 
 .toolbar {

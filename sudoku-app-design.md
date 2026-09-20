@@ -174,24 +174,39 @@ Two-phase approach, entirely client-side:
 - After each removal, run a solver that counts solutions (stop counting
   as soon as it finds a 2nd, for performance) to confirm the puzzle
   still has a **unique solution**.
-- If removal breaks uniqueness, put the number back and try a different
-  cell.
+- Also run a human-technique logic solver (naked/hidden singles, locked
+  candidates, naked/hidden pairs/triples/quads, X-Wing/swordfish,
+  XY-Wing) on the result. Each technique is tagged with a difficulty
+  tier (1–4); the puzzle is only kept if the logic solver can finish
+  the grid at all (otherwise it would require guessing) *and* the
+  hardest technique it needed is within the target difficulty's tier
+  ceiling.
+- If removal breaks uniqueness, or breaks logical solvability, or
+  needs a technique above the level's tier ceiling, put the number
+  back and try a different cell.
 - Continue until hitting the target given-count for the chosen
   difficulty level, or until no more cells can be removed without
-  breaking uniqueness.
+  violating one of the above.
 
-**Difficulty → target given-count** (starting point, tune to taste):
-| Level | Approx. givens |
-|---|---|
-| Easy | 36+ |
-| Medium | ~30–32 |
-| Hard | ~28 |
-| Expert | ~22–25 |
+This guarantees every generated puzzle — including Hard and Expert —
+is solvable by deduction alone and never forces a guess, matching the
+guarantee NYT/sudoku.com-style generators make.
+
+**Difficulty → target given-count and technique ceiling** (starting
+point, tune to taste):
+| Level | Approx. givens | Hardest technique tier allowed |
+|---|---|---|
+| Easy | 36+ | 1 (naked/hidden single) |
+| Medium | ~30–32 | 2 (+ locked candidates, pairs) |
+| Hard | ~28 | 3 (+ triples, X-Wing) |
+| Expert | ~22–25 | 4 (+ quads, swordfish, XY-Wing) |
 
 **Building blocks needed:**
 - Validity checker (no repeated digit in any row/column/box)
 - Backtracking solver (used both to generate and to verify uniqueness)
 - Solution counter (early-exit at 2 solutions)
+- Human-technique logic solver (rates/guarantees solvability without
+  guessing; see `js/logic-solver.js`)
 
 ## 6. State & persistence
 
