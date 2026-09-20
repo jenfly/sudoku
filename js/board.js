@@ -41,7 +41,7 @@ function buildBoard(container) {
 }
 
 function updateBoard(cells, state, settings) {
-  const { puzzle, solution, hints, selected } = state;
+  const { puzzle, solution, selected } = state;
   const selectedValue =
     selected && puzzle.values[selected.row][selected.col] !== 0
       ? puzzle.values[selected.row][selected.col]
@@ -70,19 +70,16 @@ function updateBoard(cells, state, settings) {
       const cell = cells[r][c];
       const value = puzzle.values[r][c];
       const isGiven = puzzle.givens[r][c] !== 0;
-      const isHinted = hints.cells[r][c];
       const isSelected = !!selected && selected.row === r && selected.col === c;
       const isWrong =
         !isGiven &&
-        !isHinted &&
         value !== 0 &&
         value !== solution[r][c] &&
         settings.autoCheckMistakes;
       const isConflict = conflictSet ? conflictSet.has(`${r},${c}`) : false;
 
       cell.classList.toggle("is-given", isGiven);
-      cell.classList.toggle("is-hinted", isHinted);
-      cell.classList.toggle("is-user", !isGiven && !isHinted && value !== 0);
+      cell.classList.toggle("is-user", !isGiven && value !== 0);
       cell.classList.toggle("is-selected", isSelected);
       cell.classList.toggle("is-error", isWrong || isConflict);
       cell.classList.toggle(

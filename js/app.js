@@ -1,8 +1,6 @@
 (function () {
   "use strict";
 
-  const HINT_LIMIT = 3;
-
   const els = {
     difficultyStat: document.getElementById("difficulty-stat"),
     difficultyValue: document.getElementById("difficulty-value"),
@@ -17,10 +15,9 @@
     pauseOverlay: document.getElementById("pause-overlay"),
     resumeBtn: document.getElementById("resume-btn"),
     undoBtn: document.getElementById("undo-btn"),
-    notesBtn: document.getElementById("notes-btn"),
+    modeNormalBtn: document.getElementById("mode-normal-btn"),
+    modeNotesBtn: document.getElementById("mode-notes-btn"),
     eraseBtn: document.getElementById("erase-btn"),
-    hintBtn: document.getElementById("hint-btn"),
-    hintBadge: document.getElementById("hint-badge"),
     numberPad: document.getElementById("number-pad"),
     newGameBtn: document.getElementById("new-game-btn"),
     settingsBtn: document.getElementById("settings-btn"),
@@ -59,10 +56,6 @@
     );
   }
 
-  function emptyBoolGrid() {
-    return Array.from({ length: 9 }, () => new Array(9).fill(false));
-  }
-
   function getPeerCells(row, col) {
     const peers = [];
     const seen = new Set();
@@ -94,8 +87,6 @@
       values: window.Solver.cloneGrid(puzzle),
       notes: emptyNotesGrid(),
       mistakes: 0,
-      hintsUsed: 0,
-      hintCells: emptyBoolGrid(),
       elapsedSeconds: 0,
       history: [],
       completed: false,
@@ -113,8 +104,6 @@
       values: window.Solver.cloneGrid(prev.givens),
       notes: emptyNotesGrid(),
       mistakes: 0,
-      hintsUsed: 0,
-      hintCells: emptyBoolGrid(),
       elapsedSeconds: 0,
       history: [],
       completed: false,
@@ -135,8 +124,6 @@
         values: saved.values,
         notes: saved.notes,
         mistakes: saved.mistakes,
-        hintsUsed: saved.hintsUsed,
-        hintCells: saved.hintCells,
         elapsedSeconds: saved.elapsedSeconds,
         history: saved.history || [],
         completed: saved.completed,
@@ -160,8 +147,6 @@
       values: state.values,
       notes: state.notes,
       mistakes: state.mistakes,
-      hintsUsed: state.hintsUsed,
-      hintCells: state.hintCells,
       elapsedSeconds: state.elapsedSeconds,
       history: state.history,
       completed: state.completed,
@@ -201,7 +186,6 @@
       {
         puzzle: { values: state.values, givens: state.givens, notes: state.notes },
         solution: state.solution,
-        hints: { cells: state.hintCells },
         selected: state.selected,
       },
       settings
@@ -209,12 +193,12 @@
     window.Board.updateNumberPad(padButtons, { values: state.values }, state.solution);
 
     els.undoBtn.disabled = state.history.length === 0 || isBoardLocked();
-    els.notesBtn.classList.toggle("is-active", state.notesMode);
-    els.notesBtn.setAttribute("aria-pressed", String(state.notesMode));
+    els.modeNormalBtn.classList.toggle("is-active", !state.notesMode);
+    els.modeNormalBtn.setAttribute("aria-pressed", String(!state.notesMode));
+    els.modeNotesBtn.classList.toggle("is-active", state.notesMode);
+    els.modeNotesBtn.setAttribute("aria-pressed", String(state.notesMode));
 
-    const hintsRemaining = Math.max(0, HINT_LIMIT - state.hintsUsed);
-    els.hintBadge.textContent = hintsRemaining;
-    els.hintBtn.disabled = hintsRemaining <= 0 || isBoardLocked();
+    els.eraseBtn.disabled = isBoardLocked();
 
     document.documentElement.classList.toggle("dark", settings.darkMode);
 
@@ -283,7 +267,7 @@
   }
 
   function isLocked(row, col) {
-    return state.givens[row][col] !== 0 || state.hintCells[row][col];
+    return state.givens[row][col] !== 0;
   }
 
   function commitDigit(digit) {
@@ -377,63 +361,8 @@
       state.mistakes = Math.max(0, state.mistakes - entry.mistakeDelta);
       restorePeerNotes(entry.peerNoteRemovals);
       state.completed = false;
-    } else if (entry.kind === "hint") {
-      state.values[entry.row][entry.col] = entry.prevValue;
-      state.notes[entry.row][entry.col] = entry.prevNotes.slice();
-      state.hintCells[entry.row][entry.col] = false;
-      state.hintsUsed = Math.max(0, state.hintsUsed - 1);
-      restorePeerNotes(entry.peerNoteRemovals);
-      state.completed = false;
     }
     state.selected = { row: entry.row, col: entry.col };
-    persist(true);
-    render();
-  }
-
-  function useHint() {
-    if (isBoardLocked()) return;
-    if (state.hintsUsed >= HINT_LIMIT) return;
-
-    let target = null;
-    if (
-      state.selected &&
-      state.values[state.selected.row][state.selected.col] === 0
-    ) {
-      target = state.selected;
-    } else {
-      outer: for (let r = 0; r < 9; r++) {
-        for (let c = 0; c < 9; c++) {
-          if (state.values[r][c] === 0) {
-            target = { row: r, col: c };
-            break outer;
-          }
-        }
-      }
-    }
-    if (!target) return;
-
-    const { row, col } = target;
-    const prevValue = state.values[row][col];
-    const prevNotes = state.notes[row][col].slice();
-    const digit = state.solution[row][col];
-
-    state.values[row][col] = digit;
-    state.notes[row][col] = [];
-    state.hintCells[row][col] = true;
-    state.hintsUsed++;
-    const peerNoteRemovals = applyAutoRemovePeerNotes(row, col, digit);
-
-    pushHistory({
-      kind: "hint",
-      row,
-      col,
-      prevValue,
-      prevNotes,
-      peerNoteRemovals,
-    });
-
-    state.selected = { row, col };
-    checkCompletion();
     persist(true);
     render();
   }
@@ -549,9 +478,12 @@
 
   els.undoBtn.addEventListener("click", undo);
   els.eraseBtn.addEventListener("click", eraseSelected);
-  els.hintBtn.addEventListener("click", useHint);
-  els.notesBtn.addEventListener("click", () => {
-    state.notesMode = !state.notesMode;
+  els.modeNormalBtn.addEventListener("click", () => {
+    state.notesMode = false;
+    render();
+  });
+  els.modeNotesBtn.addEventListener("click", () => {
+    state.notesMode = true;
     render();
   });
 
@@ -658,6 +590,7 @@
       if (isLimitReached()) return;
       commitDigit(digit);
     });
+    els.numberPad.appendChild(els.eraseBtn);
 
     state = loadOrCreateState();
     persist(true);

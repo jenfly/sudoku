@@ -1,4 +1,4 @@
-const CACHE_NAME = "sudoku-cache-v3";
+const CACHE_NAME = "sudoku-cache-v4";
 
 const APP_SHELL = [
   "./",

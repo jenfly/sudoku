@@ -272,11 +272,6 @@ button.stat {
   color: var(--user-digit);
 }
 
-.cell.is-hinted .cell-value {
-  font-weight: 600;
-  color: var(--accent);
-}
-
 .cell.is-error .cell-value {
   color: var(--error) !important;
 }
@@ -322,70 +317,87 @@ button.stat {
 
 .toolbar {
   display: flex;
-  justify-content: space-between;
-  gap: 6px;
+  align-items: stretch;
+  gap: 8px;
   margin-bottom: 14px;
 }
 
-.tool-btn {
+.segmented {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  min-height: 56px;
-  padding: 8px 4px;
+  gap: 3px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 3px;
+}
+
+.segmented-btn {
+  flex: 1;
   border: none;
   background: transparent;
-  border-radius: 12px;
-  color: var(--ink-soft);
-  font-size: 11px;
-  cursor: pointer;
-  position: relative;
-}
-
-.tool-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.tool-btn:hover:not(:disabled) {
-  background: var(--surface);
-}
-
-.tool-btn:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.tool-btn.is-active {
-  color: var(--accent);
-  background: var(--accent-soft);
-}
-
-.tool-badge {
-  position: absolute;
-  top: 4px;
-  right: calc(50% - 22px);
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  border-radius: 8px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 10px;
+  border-radius: 9px;
+  padding: 10px 4px;
+  font-family: inherit;
+  font-size: 13px;
   font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.segmented-btn.is-active {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.toolbar-undo-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 12px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toolbar-undo-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.toolbar-undo-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 /* ---------- number pad ---------- */
 
 .number-pad {
   display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 4px;
+}
+
+.num-erase-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+}
+
+.num-erase-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.num-erase-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 .num-btn {

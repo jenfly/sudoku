@@ -58,26 +58,20 @@
     </div>
 
     <div class="toolbar">
-      <button id="undo-btn" class="tool-btn" type="button" disabled>
+      <div class="segmented" role="group" aria-label="Input mode">
+        <button id="mode-normal-btn" class="segmented-btn" type="button" aria-pressed="true">Normal</button>
+        <button id="mode-notes-btn" class="segmented-btn" type="button" aria-pressed="false">Notes</button>
+      </div>
+      <button id="undo-btn" class="toolbar-undo-btn" type="button" disabled>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
         <span>Undo</span>
-      </button>
-      <button id="notes-btn" class="tool-btn" type="button" aria-pressed="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-        <span>Notes</span>
-      </button>
-      <button id="erase-btn" class="tool-btn" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.35-4.35a1 1 0 0 1 0-1.41L14.3 3.6a1 1 0 0 1 1.41 0l5.66 5.67a1 1 0 0 1 0 1.41L11 21"/><path d="M22 21H7"/><path d="m5 11 7 7"/></svg>
-        <span>Erase</span>
-      </button>
-      <button id="hint-btn" class="tool-btn" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2Z"/></svg>
-        <span>Hint</span>
-        <span id="hint-badge" class="tool-badge">3</span>
       </button>
     </div>
 
     <div id="number-pad" class="number-pad"></div>
+    <button id="erase-btn" class="num-btn num-erase-btn" type="button" aria-label="Erase">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.35-4.35a1 1 0 0 1 0-1.41L14.3 3.6a1 1 0 0 1 1.41 0l5.66 5.67a1 1 0 0 1 0 1.41L11 21"/><path d="M22 21H7"/><path d="m5 11 7 7"/></svg>
+    </button>
   </div>
 
   <!-- New Game sheet -->
