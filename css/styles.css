@@ -7,7 +7,7 @@
   --border: #e4dfd6;
   --accent: #b54a2c;
   --accent-soft: #f3ddd2;
-  --user-digit: #2e5f8a;
+  --user-digit: #2563eb;
   --error: #b23a3a;
   --error-soft: #f6dede;
   --easy: #3f7a5c;
@@ -70,7 +70,7 @@ button {
   max-width: 480px;
   min-height: 100vh;
   margin: 0 auto;
-  padding: max(12px, env(safe-area-inset-top)) 16px
+  padding: max(12px, env(safe-area-inset-top)) 8px
     max(24px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
@@ -225,18 +225,27 @@ button.stat {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 0.5px solid var(--border);
+  border-right: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
   cursor: pointer;
   background: var(--surface);
   user-select: none;
 }
 
+.cell:nth-child(9n) {
+  border-right: none;
+}
+
+.cell:nth-last-child(-n + 9) {
+  border-bottom: none;
+}
+
 .cell.box-edge-right {
-  border-right: 2px solid var(--ink);
+  border-right: 1.5px solid var(--ink);
 }
 
 .cell.box-edge-bottom {
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
 }
 
 :root.dark .cell.box-edge-right,
@@ -258,7 +267,7 @@ button.stat {
 
 .cell-value {
   font-family: var(--font-display);
-  font-size: clamp(18px, 5.6vw, 26px);
+  font-size: clamp(22px, 7.5vw, 32px);
   line-height: 1;
 }
 
@@ -268,7 +277,7 @@ button.stat {
 }
 
 .cell.is-user .cell-value {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--user-digit);
 }
 
