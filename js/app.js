@@ -297,11 +297,11 @@
 
     const prevValue = state.values[row][col];
     const prevNotes = state.notes[row][col].slice();
-    const mistakeDelta = digit !== state.solution[row][col] ? 1 : 0;
+    const isMistake = digit !== state.solution[row][col];
 
     state.values[row][col] = digit;
     state.notes[row][col] = [];
-    state.mistakes += mistakeDelta;
+    if (isMistake) state.mistakes += 1;
     const peerNoteRemovals = applyAutoRemovePeerNotes(row, col, digit);
 
     pushHistory({
@@ -311,7 +311,6 @@
       prevValue,
       newValue: digit,
       prevNotes,
-      mistakeDelta,
       peerNoteRemovals,
     });
 
@@ -336,7 +335,6 @@
         prevValue,
         newValue: 0,
         prevNotes: [],
-        mistakeDelta: 0,
         peerNoteRemovals: [],
       });
     } else if (state.notes[row][col].length) {
@@ -358,7 +356,6 @@
     } else if (entry.kind === "digit") {
       state.values[entry.row][entry.col] = entry.prevValue;
       state.notes[entry.row][entry.col] = entry.prevNotes.slice();
-      state.mistakes = Math.max(0, state.mistakes - entry.mistakeDelta);
       restorePeerNotes(entry.peerNoteRemovals);
       state.completed = false;
     }
