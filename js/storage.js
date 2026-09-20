@@ -10,7 +10,7 @@ const DEFAULT_SETTINGS = {
   autoCheckMistakes: true,
   highlightDuplicates: true,
   highlightSameNumber: true,
-  highlightPeers: false,
+  highlightPeers: true,
   autoRemovePencilMarks: true,
   showTimer: true,
   showMistakes: true,
